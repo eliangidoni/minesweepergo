@@ -9,15 +9,14 @@ import (
 )
 
 type Game struct {
-	Id                bool   `json:"id"`
+	Id                string `json:"id"`
 	Title             string `json:"title"`
 	State             string `json:"state"`
 	BoardView         string `json:"board_view"`
-	DurationSeconds   string `json:"duration_seconds"`
-	ElapsedSeconds    string `json:"elapsed_seconds"`
-	Score             string `json:"score"`
+	DurationSeconds   int `json:"duration_seconds"`
+	ElapsedSeconds    int `json:"elapsed_seconds"`
+	Score             int `json:"score"`
 	ResumedTimestamp  string `json:"resumed_timestamp"`
-	Player            string `json:"player"`
 }
 
 func Sum(i, j int) int {
