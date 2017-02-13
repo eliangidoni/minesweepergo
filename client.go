@@ -1,6 +1,7 @@
 package minesweepergo
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -19,18 +20,7 @@ type Game struct {
 	ResumedTimestamp  string `json:"resumed_timestamp"`
 }
 
-func Sum(i, j int) int {
-    return i + j
-}
-
-func State(game_id string) *Game {
-	safeId := url.QueryEscape(game_id)
-	url := fmt.Sprintf("http://127.0.0.1:7000/api/v1/games/state/?game_id=%s", safeId)
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		log.Fatal("Error in NewRequest: ", err)
-		return nil
-	}
+func sendRequest(req *http.Request) *Game {
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
@@ -43,31 +33,110 @@ func State(game_id string) *Game {
 	if err := json.NewDecoder(resp.Body).Decode(&game); err != nil {
 		log.Println(err)
 	}
-
-	fmt.Println("Id: ", game.Id)
 	return &game
 }
 
-func New(rows int, columns int, mines int) *Game {
+func State(host string, game_id string) *Game {
+	safeId := url.QueryEscape(game_id)
+	url := fmt.Sprintf("http://%s/api/v1/games/state/?game_id=%s", host, safeId)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Fatal("Error in NewRequest: ", err)
+		return nil
+	}
+	game := sendRequest(req)
+	return game
+}
+
+func New(host string, rows int, columns int, mines int) *Game {
+	values := url.Values{}
+	values.Set("rows", fmt.Sprintf("%s", rows))
+	values.Set("columns", fmt.Sprintf("%s", columns))
+	values.Set("mines", fmt.Sprintf("%s", mines))
+
+	url := fmt.Sprintf("http://%s/api/v1/games/new/", host)
+	req, err := http.NewRequest("POST", url, bytes.NewBufferString(values.Encode()))
+	if err != nil {
+		log.Fatal("Error in NewRequest: ", err)
+		return nil
+	}
+	game := sendRequest(req)
+	return game
+}
+
+func Pause(host string, game_id string) *Game {
+	values := url.Values{}
+	values.Set("game_id", game_id)
+
+	url := fmt.Sprintf("http://%s/api/v1/games/pause/", host)
+	req, err := http.NewRequest("POST", url, bytes.NewBufferString(values.Encode()))
+	if err != nil {
+		log.Fatal("Error in NewRequest: ", err)
+		return nil
+	}
+	game := sendRequest(req)
+	return game
+}
+
+func Resume(host string, game_id string) *Game {
+	values := url.Values{}
+	values.Set("game_id", game_id)
+
+	url := fmt.Sprintf("http://%s/api/v1/games/resume/", host)
+	req, err := http.NewRequest("POST", url, bytes.NewBufferString(values.Encode()))
+	if err != nil {
+		log.Fatal("Error in NewRequest: ", err)
+		return nil
+	}
+	game := sendRequest(req)
+	return game
+}
+
+func MarkAsFlag(host string, game_id string, x int, y int) *Game {
+	values := url.Values{}
+	values.Set("game_id", game_id)
+	values.Set("x", fmt.Sprintf("%s", x))
+	values.Set("y", fmt.Sprintf("%s", y))
+
+	url := fmt.Sprintf("http://%s/api/v1/games/mark_as_flag/", host)
+	req, err := http.NewRequest("POST", url, bytes.NewBufferString(values.Encode()))
+	if err != nil {
+		log.Fatal("Error in NewRequest: ", err)
+		return nil
+	}
+	game := sendRequest(req)
+	return game
+}
+
+func MarkAsQuestion(host string, game_id string, x int, y int) *Game {
+	values := url.Values{}
+	values.Set("game_id", game_id)
+	values.Set("x", fmt.Sprintf("%s", x))
+	values.Set("y", fmt.Sprintf("%s", y))
+
+	url := fmt.Sprintf("http://%s/api/v1/games/mark_as_question/", host)
+	req, err := http.NewRequest("POST", url, bytes.NewBufferString(values.Encode()))
+	if err != nil {
+		log.Fatal("Error in NewRequest: ", err)
+		return nil
+	}
+	game := sendRequest(req)
+	return game
 	return &Game{}
 }
 
-func Pause(game_id string) *Game {
-	return &Game{}
-}
+func Reveal(host string, game_id string, x int, y int) *Game {
+	values := url.Values{}
+	values.Set("game_id", game_id)
+	values.Set("x", fmt.Sprintf("%s", x))
+	values.Set("y", fmt.Sprintf("%s", y))
 
-func Resume(game_id string) *Game {
-	return &Game{}
-}
-
-func MarkAsFlag(game_id string, x int, y int) *Game {
-	return &Game{}
-}
-
-func MarkAsQuestion(game_id string, x int, y int) *Game {
-	return &Game{}
-}
-
-func Reveal(game_id string, x int, y int) *Game {
-	return &Game{}
+	url := fmt.Sprintf("http://%s/api/v1/games/reveal/", host)
+	req, err := http.NewRequest("POST", url, bytes.NewBufferString(values.Encode()))
+	if err != nil {
+		log.Fatal("Error in NewRequest: ", err)
+		return nil
+	}
+	game := sendRequest(req)
+	return game
 }
