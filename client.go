@@ -49,94 +49,124 @@ func State(host string, game_id string) *Game {
 }
 
 func New(host string, rows int, columns int, mines int) *Game {
-	values := url.Values{}
-	values.Set("rows", fmt.Sprintf("%s", rows))
-	values.Set("columns", fmt.Sprintf("%s", columns))
-	values.Set("mines", fmt.Sprintf("%s", mines))
-
+	type Arg struct {
+		Rows int
+		Columns int
+		Mines int
+	}
+	data, err := json.Marshal(Arg{Rows: rows, Columns: columns, Mines: mines})
+    if err != nil {
+	    fmt.Println("JSON encode error: ", err)
+    }
 	url := fmt.Sprintf("http://%s/api/v1/games/new/", host)
-	req, err := http.NewRequest("POST", url, bytes.NewBufferString(values.Encode()))
+	req, err := http.NewRequest("POST", url, bytes.NewReader(data))
 	if err != nil {
 		log.Fatal("Error in NewRequest: ", err)
 		return nil
 	}
+    req.Header.Add("Content-Type", "application/json")
 	game := sendRequest(req)
 	return game
 }
 
 func Pause(host string, game_id string) *Game {
-	values := url.Values{}
-	values.Set("game_id", game_id)
-
+	type Arg struct {
+		GameId string
+	}
+	data, err := json.Marshal(Arg{GameId: game_id})
+    if err != nil {
+	    fmt.Println("JSON encode error: ", err)
+    }
 	url := fmt.Sprintf("http://%s/api/v1/games/pause/", host)
-	req, err := http.NewRequest("POST", url, bytes.NewBufferString(values.Encode()))
+	req, err := http.NewRequest("POST", url, bytes.NewReader(data))
 	if err != nil {
 		log.Fatal("Error in NewRequest: ", err)
 		return nil
 	}
+    req.Header.Add("Content-Type", "application/json")
 	game := sendRequest(req)
 	return game
 }
 
 func Resume(host string, game_id string) *Game {
-	values := url.Values{}
-	values.Set("game_id", game_id)
-
+	type Arg struct {
+		GameId string
+	}
+	data, err := json.Marshal(Arg{GameId: game_id})
+    if err != nil {
+	    fmt.Println("JSON encode error: ", err)
+    }
 	url := fmt.Sprintf("http://%s/api/v1/games/resume/", host)
-	req, err := http.NewRequest("POST", url, bytes.NewBufferString(values.Encode()))
+	req, err := http.NewRequest("POST", url, bytes.NewReader(data))
 	if err != nil {
 		log.Fatal("Error in NewRequest: ", err)
 		return nil
 	}
+    req.Header.Add("Content-Type", "application/json")
 	game := sendRequest(req)
 	return game
 }
 
 func MarkAsFlag(host string, game_id string, x int, y int) *Game {
-	values := url.Values{}
-	values.Set("game_id", game_id)
-	values.Set("x", fmt.Sprintf("%s", x))
-	values.Set("y", fmt.Sprintf("%s", y))
-
+	type Arg struct {
+		GameId string
+		X int
+		Y int
+	}
+	data, err := json.Marshal(Arg{GameId: game_id, X: x, Y: y})
+    if err != nil {
+	    fmt.Println("JSON encode error: ", err)
+    }
 	url := fmt.Sprintf("http://%s/api/v1/games/mark_as_flag/", host)
-	req, err := http.NewRequest("POST", url, bytes.NewBufferString(values.Encode()))
+	req, err := http.NewRequest("POST", url, bytes.NewReader(data))
 	if err != nil {
 		log.Fatal("Error in NewRequest: ", err)
 		return nil
 	}
+    req.Header.Add("Content-Type", "application/json")
 	game := sendRequest(req)
 	return game
 }
 
 func MarkAsQuestion(host string, game_id string, x int, y int) *Game {
-	values := url.Values{}
-	values.Set("game_id", game_id)
-	values.Set("x", fmt.Sprintf("%s", x))
-	values.Set("y", fmt.Sprintf("%s", y))
-
+	type Arg struct {
+		GameId string
+		X int
+		Y int
+	}
+	data, err := json.Marshal(Arg{GameId: game_id, X: x, Y: y})
+    if err != nil {
+	    fmt.Println("JSON encode error: ", err)
+    }
 	url := fmt.Sprintf("http://%s/api/v1/games/mark_as_question/", host)
-	req, err := http.NewRequest("POST", url, bytes.NewBufferString(values.Encode()))
+	req, err := http.NewRequest("POST", url, bytes.NewReader(data))
 	if err != nil {
 		log.Fatal("Error in NewRequest: ", err)
 		return nil
 	}
+    req.Header.Add("Content-Type", "application/json")
 	game := sendRequest(req)
 	return game
 	return &Game{}
 }
 
 func Reveal(host string, game_id string, x int, y int) *Game {
-	values := url.Values{}
-	values.Set("game_id", game_id)
-	values.Set("x", fmt.Sprintf("%s", x))
-	values.Set("y", fmt.Sprintf("%s", y))
-
+	type Arg struct {
+		GameId string
+		X int
+		Y int
+	}
+	data, err := json.Marshal(Arg{GameId: game_id, X: x, Y: y})
+    if err != nil {
+	    fmt.Println("JSON encode error: ", err)
+    }
 	url := fmt.Sprintf("http://%s/api/v1/games/reveal/", host)
-	req, err := http.NewRequest("POST", url, bytes.NewBufferString(values.Encode()))
+	req, err := http.NewRequest("POST", url, bytes.NewReader(data))
 	if err != nil {
 		log.Fatal("Error in NewRequest: ", err)
 		return nil
 	}
+    req.Header.Add("Content-Type", "application/json")
 	game := sendRequest(req)
 	return game
 }
