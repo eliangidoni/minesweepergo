@@ -54,10 +54,7 @@ func New(host string, rows int, columns int, mines int) *Game {
 		Columns int `json:"columns"`
 		Mines   int `json:"mines"`
 	}
-	data, err := json.Marshal(Arg{Rows: rows, Columns: columns, Mines: mines})
-    if err != nil {
-	    fmt.Println("JSON encode error: ", err)
-    }
+	data, _ := json.Marshal(Arg{Rows: rows, Columns: columns, Mines: mines})
 	url := fmt.Sprintf("http://%s/api/v1/games/new/", host)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	if err != nil {
@@ -73,10 +70,7 @@ func Pause(host string, game_id string) *Game {
 	type Arg struct {
 		GameId string `json:"game_id"`
 	}
-	data, err := json.Marshal(Arg{GameId: game_id})
-    if err != nil {
-	    fmt.Println("JSON encode error: ", err)
-    }
+	data, _ := json.Marshal(Arg{GameId: game_id})
 	url := fmt.Sprintf("http://%s/api/v1/games/pause/", host)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	if err != nil {
@@ -92,10 +86,7 @@ func Resume(host string, game_id string) *Game {
 	type Arg struct {
 		GameId string `json:"game_id"`
 	}
-	data, err := json.Marshal(Arg{GameId: game_id})
-    if err != nil {
-	    fmt.Println("JSON encode error: ", err)
-    }
+	data, _ := json.Marshal(Arg{GameId: game_id})
 	url := fmt.Sprintf("http://%s/api/v1/games/resume/", host)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	if err != nil {
@@ -110,13 +101,10 @@ func Resume(host string, game_id string) *Game {
 func MarkAsFlag(host string, game_id string, x int, y int) *Game {
 	type Arg struct {
 		GameId string `json:"game_id"`
-		X int
-		Y int
+		X int `json:"x"`
+		Y int `json:"y"`
 	}
-	data, err := json.Marshal(Arg{GameId: game_id, X: x, Y: y})
-    if err != nil {
-	    fmt.Println("JSON encode error: ", err)
-    }
+	data, _ := json.Marshal(Arg{GameId: game_id, X: x, Y: y})
 	url := fmt.Sprintf("http://%s/api/v1/games/mark_as_flag/", host)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	if err != nil {
@@ -131,13 +119,10 @@ func MarkAsFlag(host string, game_id string, x int, y int) *Game {
 func MarkAsQuestion(host string, game_id string, x int, y int) *Game {
 	type Arg struct {
 		GameId string `json:"game_id"`
-		X int
-		Y int
+		X int `json:"x"`
+		Y int `json:"y"`
 	}
-	data, err := json.Marshal(Arg{GameId: game_id, X: x, Y: y})
-    if err != nil {
-	    fmt.Println("JSON encode error: ", err)
-    }
+	data, _ := json.Marshal(Arg{GameId: game_id, X: x, Y: y})
 	url := fmt.Sprintf("http://%s/api/v1/games/mark_as_question/", host)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	if err != nil {
@@ -156,10 +141,7 @@ func Reveal(host string, game_id string, x int, y int) *Game {
 		X int `json:"x"`
 		Y int `json:"y"`
 	}
-	data, err := json.Marshal(Arg{GameId: game_id, X: x, Y: y})
-    if err != nil {
-	    fmt.Println("JSON encode error: ", err)
-    }
+	data, _ := json.Marshal(Arg{GameId: game_id, X: x, Y: y})
 	url := fmt.Sprintf("http://%s/api/v1/games/reveal/", host)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
 	if err != nil {
