@@ -13,7 +13,7 @@ type Game struct {
 	Id                string `json:"id"`
 	Title             string `json:"title"`
 	State             string `json:"state"`
-	BoardView         string `json:"board_view"`
+	BoardView         [][]string `json:"board_view"`
 	DurationSeconds   int `json:"duration_seconds"`
 	ElapsedSeconds    int `json:"elapsed_seconds"`
 	Score             int `json:"score"`
